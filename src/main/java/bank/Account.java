@@ -99,7 +99,7 @@ public class Account implements Serializable {
         return balance;
     }
 
-    public void setBalance(int balance) {
+    public void setBalance(double balance) {
         this.balance = balance;
     }
 

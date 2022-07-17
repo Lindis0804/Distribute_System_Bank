@@ -11,7 +11,7 @@ public class testdatabase {
          Connection c = null;
          try {
              Driver driver = new Driver();
-             DriverManager.registerDriver(new Driver());
+             DriverManager.registerDriver(driver);
              String url = "jdbc:mySQL://localhost:3306/bank";
              String username = "root";
              String password = "";

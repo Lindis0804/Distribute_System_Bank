@@ -50,8 +50,11 @@ public class ATM {
         String[] credentials = input.split("-");
 
         boolean loggedIn = false;
+        int accNum = -1;
+        int accNum1 = 0;
         try {
-            if (bank.login(credentials[0], credentials[1])) {
+            accNum = bank.login(credentials[0],credentials[1] );
+            if (accNum>0) {
                 loggedIn = true;
                 System.out.println("Successfully Logged In");
             }else{
@@ -77,7 +80,7 @@ public class ATM {
                     input = in.next();
                     try {
                         System.out.println("Successfully deposited €" + input
-                                + "\nNew Balance: €" + bank.deposit(Double.parseDouble(input))); //Test
+                                + "\nNew Balance: €" + bank.deposit(accNum,Double.parseDouble(input))); //Test
                     } catch (NumberFormatException e) {
                         System.out.println("Invalid Input. Try again");
                         break;
@@ -91,7 +94,7 @@ public class ATM {
                     input = in.next();
                     try {
                         System.out.println("Successfully withdrew €" + input
-                                + "\nNew Balance: €" + bank.withdraw(Double.parseDouble(input)));
+                                + "\nNew Balance: €" + bank.withdraw(accNum,Double.parseDouble(input)));
                     } catch (NumberFormatException e) {
                         System.out.println("Invalid Input. Try again");
                         break;
@@ -101,7 +104,7 @@ public class ATM {
                     break;
 
                 case "balance":
-                    System.out.println("Your balance is €" + bank.getBalance());
+                    System.out.println("Your balance is €" + bank.getBalance(accNum));
                     break;
 
                 case "statement":
@@ -116,32 +119,32 @@ public class ATM {
                         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
                         try {
                             Date choice = sdf.parse(input);
-                            System.out.println(bank.getStatement(choice).toString());
+                            System.out.println(bank.getStatement(accNum,choice).toString());
                             break;
                         } catch (ParseException e) {
                             System.out.println("We could not understand your input, using default");
-                            System.out.println(bank.getStatement().toString());
+                            System.out.println(bank.getStatement(accNum).toString());
                             break;
                         }
 
                     }else {
                         if (input.toLowerCase().trim().equals("n")) {
                             System.out.println("Using default of past 6 months");
-                            System.out.println(bank.getStatement().toString());
+                            System.out.println(bank.getStatement(accNum).toString());
                             break;
                         } else {
                             System.out.println("Input not recognised, using default");
-                            System.out.println(bank.getStatement().toString());
+                            System.out.println(bank.getStatement(accNum).toString());
                             break;
                         }
                     }
                 case "transfer":
-                    int accNum = 1;
+
                     while (true){
                         System.out.println("Input account number you want to transfer money :");
                         input = in.next();
                         if (bank.checkAcc(Integer.parseInt(input))){
-                            accNum = Integer.parseInt(input);
+                            accNum1 = Integer.parseInt(input);
                             break;
                         }
                         else{
@@ -153,7 +156,7 @@ public class ATM {
                     while (true) {
                         System.out.println("Input amount of money :");
                         input = in.next();
-                        kq = bank.transfer(accNum, Double.parseDouble(input));
+                        kq = bank.transfer(accNum,accNum1, Double.parseDouble(input));
                         if (kq==-1.0) System.out.println("Your account has not enough money!! Please input another amount!!");
                         else break;
                     }

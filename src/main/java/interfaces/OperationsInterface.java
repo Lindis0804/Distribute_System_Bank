@@ -14,21 +14,21 @@ import bank.Statement;
  */
 public interface OperationsInterface extends Remote {
 
-    boolean login(String usr, String pass) throws RemoteException, SQLException;
+    int login(String usr, String pass) throws RemoteException, SQLException;
 
-    double deposit(double amt) throws RemoteException, SQLException; //return new balance
+    double deposit(int accNum,double amt) throws RemoteException, SQLException; //return new balance
 
-    double withdraw(double amt) throws RemoteException, SQLException; // return new balance
+    double withdraw(int accNum,double amt) throws RemoteException, SQLException; // return new balance
     boolean checkAcc(int accNum) throws RemoteException,SQLException;
-    double transfer(int accNum,double amt) throws RemoteException,SQLException;
-    double getBalance() throws RemoteException;
+    double transfer(int accNum1,int accNum2,double amt) throws RemoteException,SQLException;
+    double getBalance(int accNum) throws RemoteException, SQLException;
 
     boolean checkSessionId(UUID id) throws RemoteException;
 
     void exit() throws RemoteException, NotBoundException;
 
-    Statement getStatement() throws RemoteException;
+    Statement getStatement(int accNum) throws RemoteException;
 
-    Statement getStatement(Date d) throws RemoteException;
+    Statement getStatement(int accNum,Date d) throws RemoteException;
 
 }

@@ -58,6 +58,8 @@ public class Transaction implements Serializable {
 
         String info = "\nTransaction Type: " + this.transactionType
                 + "\nAmount: "+ this.amount
+                +"\nSource: "+this.accountNum1
+                +"\nDes: "+this.accountNum2
                 + "\nDate: "+ sdf.format(this.transDate) + "\n";
 
         return info;
