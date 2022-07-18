@@ -145,18 +145,19 @@ public class BankServer extends UnicastRemoteObject implements OperationsInterfa
         Connection connection = testdatabase.getConnection();
         java.sql.Statement statement = connection.createStatement();
         //cập nhật lại tài khoản được chuyển
-        activeAcc.get(accNum2).setBalance(activeAcc.get(accNum2).getBalance()+amt);
-//        String sql = "Select balance from user_account where accountNum ="+ accNum2;
-//        ResultSet rs = statement.executeQuery(sql);
-//        int kq = 0;
-//        rs.next();
-//        double balance = rs.getDouble("balance");
-//        balance += amt;
-        String sql = "Update user_account set balance = " + activeAcc.get(accNum2).getBalance() + " where accountNum = " + accNum2;
+        Transaction t1 = new Transaction(amt,accNum1,accNum2,"Receive",new Date());
+        String sql = "Select balance from user_account where accountNum ="+accNum2;
+        ResultSet rs = statement.executeQuery(sql);
+        rs.next();
+        res = rs.getDouble("balance");
+        res += amt;
+        sql = "Update user_account set balance = " + res+ " where accountNum = " + accNum2;
         int kq = statement.executeUpdate(sql);
 
         //cập nhật lại tài khoản đã chuyển tiền
         sql = "INSERT INTO transaction (Id, accountNum1, accountNum2, amount, transactionType, transDate) VALUES (NULL, "+accNum1+", "+ accNum2 +", "+amt+", '"+t.getTransactionType()+"', '"+yearFormat.format(t.transDate)+"')";
+        kq = statement.executeUpdate(sql);
+        sql = "INSERT INTO transaction (Id, accountNum1, accountNum2, amount, transactionType, transDate) VALUES (NULL, "+accNum2+", "+ accNum1 +", "+amt+", '"+t1.getTransactionType()+"', '"+yearFormat.format(t1.transDate)+"')";
         kq = statement.executeUpdate(sql);
         sql = "Update user_account set balance = "+activeAcc.get(accNum1).getBalance()+" where accountNum = "+accNum1;
         kq = statement.executeUpdate(sql);
@@ -176,19 +177,45 @@ public class BankServer extends UnicastRemoteObject implements OperationsInterfa
      * Get statement of user transactions
      * @return
      */
-    public Statement getStatement(int accNum) {
-
-        return activeAcc.get(accNum).getStatement();
+    public Statement getStatement(int accNum) throws SQLException {
+        Connection connection = testdatabase.getConnection();
+        java.sql.Statement statement = connection.createStatement();
+        String sql = "Select * from transaction where accountNum1 = "+accNum;
+        ResultSet rs = statement.executeQuery(sql);
+        Statement st = new Statement(accNum);
+        while (rs.next()){
+            double amount = rs.getDouble("amount");
+            int accNum1 = rs.getInt("accountNum1");
+            int accNum2 = rs.getInt("accountNum2");
+            String type = rs.getString("transactionType");
+            Date date = rs.getDate("transDate");
+            st.addTransaction(new Transaction(amount,accNum1,accNum2,type,date));
+        }
+        return st;
     }
+
 
     /**
      * Get copy of user interaction back to desired date
      * @param d
      * @return
      */
-    public Statement getStatement(int accNum,Date d) {
+    public Statement getStatement(int accNum,Date d) throws SQLException {
 
-        return activeAcc.get(accNum).getStatement(d);
+        Connection connection = testdatabase.getConnection();
+        java.sql.Statement statement = connection.createStatement();
+        String sql = "Select * from transaction where accountNum1 = "+accNum+" and transDate >='"+yearFormat.format(d)+"' and transDate<='"+yearFormat.format(new Date())+"'";
+        ResultSet rs = statement.executeQuery(sql);
+        Statement st = new Statement(accNum,d);
+        while (rs.next()){
+            double amount = rs.getDouble("amount");
+            int accNum1 = rs.getInt("accountNum1");
+            int accNum2 = rs.getInt("accountNum2");
+            String type = rs.getString("transactionType");
+            Date date = rs.getDate("transDate");
+            st.addTransaction(new Transaction(amount,accNum1,accNum2,type,date));
+        }
+        return st;
     }
 
 

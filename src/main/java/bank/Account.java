@@ -1,6 +1,11 @@
 package bank;
 
+import database.testdatabase;
+
 import java.io.Serializable;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -110,8 +115,16 @@ public class Account implements Serializable {
     public void setAccountNum(int accountNum) {
         this.accountNum = accountNum;
     }
-
+    // lấy toàn bộ lịch sử giao dịch
     public ArrayList<Transaction> getTransactions() {
+
         return transactions;
+    }
+    //lấy lịch sử giao dịch theo thời gian chọn
+    public ArrayList<Transaction> getTransactions(Date startDate,Date endDate){
+        return transactions;
+    }
+    public void addTransactions(Transaction transaction){
+        this.transactions.add(transaction);
     }
 }

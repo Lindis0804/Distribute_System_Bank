@@ -1,3 +1,4 @@
+
 package atm;
 
 import java.rmi.NotBoundException;
@@ -41,7 +42,7 @@ public class ATM {
             System.out.println("RMI Port defaulting to " + 1099);
         }
 
-            bank = (OperationsInterface) registry.lookup(name);
+        bank = (OperationsInterface) registry.lookup(name);
         if (bank != null)
             System.out.println("bank found");
 
@@ -70,17 +71,17 @@ public class ATM {
         UUID sessionId = UUID.randomUUID();
         while (loggedIn) { //User stays logged in until bank.checkSessionId() changes it to false
 
-            System.out.println("\nPlease enter an option: (deposit / withdraw / balance / statement / transfer / exit)");
+            System.out.println("\nOptions: \n1. Deposit\n2. Withdraw\n3. Balance\n4. Statement\n5. Transfer\n6. Exit\nPlease choose your option: ");
             String operation = in.next();
 
             switch (operation.trim().toLowerCase()) {
 
-                case "deposit":
+                case "1":
                     System.out.println("Enter an amount to deposit");
                     input = in.next();
                     try {
-                        System.out.println("Successfully deposited €" + input
-                                + "\nNew Balance: €" + bank.deposit(accNum,Double.parseDouble(input))); //Test
+                        System.out.println("Successfully deposited " + input
+                                + "\nNew Balance: " + bank.deposit(accNum,Double.parseDouble(input))); //Test
                     } catch (NumberFormatException e) {
                         System.out.println("Invalid Input. Try again");
                         break;
@@ -89,12 +90,12 @@ public class ATM {
                     }
                     break;
 
-                case "withdraw":
+                case "2":
                     System.out.println("Enter an amount to withdraw");
                     input = in.next();
                     try {
                         System.out.println("Successfully withdrew €" + input
-                                + "\nNew Balance: €" + bank.withdraw(accNum,Double.parseDouble(input)));
+                                + "\nNew Balance: " + bank.withdraw(accNum,Double.parseDouble(input)));
                     } catch (NumberFormatException e) {
                         System.out.println("Invalid Input. Try again");
                         break;
@@ -103,11 +104,11 @@ public class ATM {
                     }
                     break;
 
-                case "balance":
-                    System.out.println("Your balance is €" + bank.getBalance(accNum));
+                case "3":
+                    System.out.println("Your balance is " + bank.getBalance(accNum));
                     break;
 
-                case "statement":
+                case "4":
                     System.out.println("Displaying statement:");
                     System.out.println("Would you like to set a custom date for the statement to run to? (Y/N)");
                     input = in.next();
@@ -129,7 +130,7 @@ public class ATM {
 
                     }else {
                         if (input.toLowerCase().trim().equals("n")) {
-                            System.out.println("Using default of past 6 months");
+                            System.out.println("Using default of past 3 months");
                             System.out.println(bank.getStatement(accNum).toString());
                             break;
                         } else {
@@ -138,7 +139,7 @@ public class ATM {
                             break;
                         }
                     }
-                case "transfer":
+                case "5":
 
                     while (true){
                         System.out.println("Input account number you want to transfer money :");
@@ -163,7 +164,7 @@ public class ATM {
                     if (kq == 0.0) System.out.println("Failure in transfering!!");
                     else System.out.println("Transfer successfully!!");
                     break;
-                case "exit":
+                case "6":
                     System.out.println("Have a nice day");
                     System.exit(0);
                     break;

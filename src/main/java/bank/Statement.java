@@ -18,7 +18,15 @@ public class Statement implements Serializable{
     private ArrayList transactions;
     private Date startDate;
     private Date endDate;
-
+    public Statement(int accNum){
+        this.accNum = accNum;
+        this.transactions = new ArrayList();
+    };
+    public Statement(int accNum,Date startDate){
+        this.accNum = accNum;
+        this.startDate = startDate;
+        this.transactions = new ArrayList();
+    }
     public Statement(Account a){
         this.accName = a.getName();
         this.accNum = a.getAccountNum();
@@ -32,13 +40,14 @@ public class Statement implements Serializable{
      * @param a
      * @param endDate
      */
-    public Statement(Account a, Date endDate){
+    public Statement(Account a, Date startDate){
         this.accName = a.getName();
         this.accNum = a.getAccountNum();
         this.transactions = a.getTransactions();
         this.startDate = getStartDate();
         this.endDate = endDate;
     }
+
 
     /**
      * Set end date of statement to 3 months in past
@@ -62,16 +71,22 @@ public class Statement implements Serializable{
     public String getAccoutName(){return this.accName;} // returns name of account holder
 
     public List getTransations(){return this.transactions;}
+    public void addTransaction(Transaction transaction){
+        this.transactions.add(transaction);
+    }
 
     public String toString(){
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 
         String info = "Account Number: " + accNum
-                + "\nAccount Name: " + accName
-                + "\nThis statement is for the period " + sdf.format(endDate) + " until " + sdf.format(startDate)
+                + "\nThis statement is for the period " + sdf.format(startDate) + " until " + sdf.format(new Date())
                 + "\nTransactions for this period:\n" + transactions.toString() ;
 
         return info;
+    }
+    public String toString1(){
+        String infor = "Account Number: "+accNum+"\nTransactions history :\n"+transactions.toString();
+        return infor;
     }
 
 }

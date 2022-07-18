@@ -27,8 +27,8 @@ public interface OperationsInterface extends Remote {
 
     void exit() throws RemoteException, NotBoundException;
 
-    Statement getStatement(int accNum) throws RemoteException;
+    Statement getStatement(int accNum) throws RemoteException, SQLException;
 
-    Statement getStatement(int accNum,Date d) throws RemoteException;
+    Statement getStatement(int accNum,Date d) throws RemoteException, SQLException;
 
 }
